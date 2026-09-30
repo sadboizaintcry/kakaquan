@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #141210;
+  --color-elevated: #1c1916;
+  --color-fg: #f4efe8;
+  --color-muted: #9c948a;
+  --color-subtle: #6e6860;
+  --color-accent: #d45a28;
+  --color-accent-hover: #e46a36;
+  --color-accent-fg: #fff7f0;
+  --color-cream: #f4efe8;
+  --color-cream-fg: #141210;
+  --color-border: #2c2824;
+  --color-ring: #d45a28;
+  --color-success: #7d9b6a;
+
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.125rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 1.75rem;
+
+  --shadow-border: 0 0 0 1px rgba(244, 239, 232, 0.08);
+  --shadow-border-hover: 0 0 0 1px rgba(244, 239, 232, 0.14);
+
+  --tracking-logo: 0.22em;
+  --tracking-kicker: 0.32em;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 70%, black);
+    color: var(--color-accent-fg);
+  }
+
+  img {
+    outline: 1px solid rgba(255, 255, 255, 0.08);
+    outline-offset: -1px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  input[type="date"],
+  input[type="time"] {
+    color-scheme: dark;
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.hero-kenburns {
+  animation: kenburns 8s var(--ease-out) forwards;
+}
+
+.map-embed {
+  filter: grayscale(1) invert(0.9) contrast(0.92);
+  min-height: 20rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-kenburns {
+    animation: none;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}

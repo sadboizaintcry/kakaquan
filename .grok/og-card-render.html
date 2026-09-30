@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>KAKAQ BBQ</title>
+    <style>
+      @font-face {
+        font-family: CinzelCard;
+        src: url("og-fonts/Cinzel-SemiBold.ttf") format("truetype");
+        font-weight: 100 900;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: OutfitCard;
+        src: url("og-fonts/Outfit.ttf") format("truetype");
+        font-weight: 100 900;
+        font-style: normal;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #0a0a0a;
+      }
+      .frame {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+      }
+      .bg {
+        position: absolute;
+        inset: 0;
+        width: 1200px;
+        height: 630px;
+        object-fit: cover;
+        object-position: center 42%;
+        filter: saturate(0.92) contrast(1.05);
+      }
+      .veil {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 50% 48%,
+            rgba(10, 10, 10, 0.42) 0%,
+            rgba(10, 10, 10, 0.58) 46%,
+            rgba(10, 10, 10, 0.78) 100%
+          ),
+          linear-gradient(180deg, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.28) 42%, rgba(10, 10, 10, 0.72) 100%);
+      }
+      .ember {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 640px;
+        height: 280px;
+        transform: translate(-50%, -46%);
+        background: radial-gradient(ellipse at center, rgba(212, 90, 40, 0.22) 0%, rgba(212, 90, 40, 0) 70%);
+        pointer-events: none;
+      }
+      .lockup {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #f4efe8;
+      }
+      .wordmark {
+        font-family: CinzelCard, "Liberation Serif", serif;
+        font-weight: 600;
+        font-size: 152px;
+        letter-spacing: 0.26em;
+        padding-left: 0.26em;
+        line-height: 0.92;
+        font-kerning: normal;
+        text-shadow: 0 8px 40px rgba(10, 10, 10, 0.72);
+      }
+      .rule {
+        width: 68px;
+        height: 2px;
+        margin: 26px 0 22px;
+        background: #d45a28;
+        border-radius: 1px;
+      }
+      .tag {
+        font-family: OutfitCard, "Liberation Sans", sans-serif;
+        font-weight: 300;
+        font-size: 22px;
+        letter-spacing: 0.62em;
+        padding-left: 0.62em;
+        color: #f4efe8;
+        opacity: 0.92;
+        text-shadow: 0 4px 18px rgba(10, 10, 10, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <img class="bg" alt="" src="file:///workspace/public/images/hero-galbi.jpg" />
+      <div class="veil"></div>
+      <div class="ember"></div>
+      <div class="lockup">
+        <div class="wordmark">KAKAQ</div>
+        <div class="rule"></div>
+        <div class="tag">BBQ</div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "KAKAQ BBQ",
+      "hasCanvas": false,
+      "bodyTextLen": 2264,
+      "bodyTextHash": "250450ae421085f33a39bf9e2f448a6e1973d45080b27e8def5da8469f63ecbc",
+      "bodyTextPrefix": "K KAKAQ Trang chủ Thực đơn Đặt bàn Liên hệ Đặt bàn ngay KOREAN B",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "KAKAQ BBQ",
+      "hasCanvas": false,
+      "bodyTextLen": 2264,
+      "bodyTextHash": "250450ae421085f33a39bf9e2f448a6e1973d45080b27e8def5da8469f63ecbc",
+      "bodyTextPrefix": "K KAKAQ Trang chủ Thực đơn Đặt bàn Liên hệ Đặt bàn ngay KOREAN B",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}
