@@ -21,19 +21,18 @@ export function ContactSection() {
             <Info
               icon={MapPin}
               label="Địa chỉ"
-              value="88 Võ Văn Tần, Phường 6, Quận 3, TP. Hồ Chí Minh"
-              hint="Địa chỉ mẫu — bạn có thể thay sau"
+              value="Tổ 5, Khu Phố 2, P. Hắc Dịch, TP. Hồ Chí Minh"
             />
             <Info
               icon={Phone}
               label="Điện thoại"
-              value="0901 888 247"
-              href="tel:0901888247"
+              value="0972 902 452"
+              href="tel:0972902452"
             />
             <Info
               icon={Clock}
               label="Giờ mở cửa"
-              value="11:00 – 23:00 · Thứ 2 đến Chủ nhật"
+              value="11:00 – 22:00 · Thứ 2 đến Chủ nhật"
             />
 
             <div>
