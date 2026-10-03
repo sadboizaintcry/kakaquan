@@ -2,10 +2,10 @@ import { Hono, type Context } from "hono";
 import { cors } from "hono/cors";
 import { z } from "zod";
 import {
-  sendZaloNotification,
+  sendTelegramNotification,
   type BookingInfo,
-  type ZaloEnv,
-} from "./zalo";
+  type TelegramEnv,
+} from "./telegram";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -14,7 +14,7 @@ import {
 type Env = {
   DB: D1Database;
   ADMIN_TOKEN?: string;
-} & ZaloEnv;
+} & TelegramEnv;
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -106,7 +106,7 @@ app.get("/api/health", (c) =>
 );
 
 // ---------------------------------------------------------------------------
-// POST /api/bookings — tạo đặt bàn + gửi Zalo cho chủ quán
+// POST /api/bookings — tạo đặt bàn + gửi Telegram cho chủ quán
 // ---------------------------------------------------------------------------
 
 app.post("/api/bookings", async (c) => {
@@ -176,30 +176,30 @@ app.post("/api/bookings", async (c) => {
     notes: input.notes,
   };
 
-  // Gửi Zalo cho chủ quán. LỖI ZALO KHÔNG BAO GIỜ LÀM FAIL BOOKING.
-  let zaloSent = false;
+  // Gửi Telegram cho chủ quán. LỖI GỬI TIN KHÔNG BAO GIỜ LÀM FAIL BOOKING.
+  let notifySent = false;
   try {
-    const result = await sendZaloNotification(booking, c.env);
-    zaloSent = result.ok;
+    const result = await sendTelegramNotification(booking, c.env);
+    notifySent = result.ok;
     if (result.ok) {
       await c.env.DB.prepare(
-        `UPDATE bookings SET zalo_sent = 1 WHERE booking_code = ?`,
+        `UPDATE bookings SET notify_sent = 1 WHERE booking_code = ?`,
       )
         .bind(bookingCode)
         .run();
     } else {
-      console.error(`[zalo] gửi thất bại cho ${bookingCode}:`, result.error);
+      console.error(`[telegram] gửi thất bại cho ${bookingCode}:`, result.error);
       await c.env.DB.prepare(
-        `UPDATE bookings SET zalo_error = ? WHERE booking_code = ?`,
+        `UPDATE bookings SET notify_error = ? WHERE booking_code = ?`,
       )
         .bind(result.error ?? "unknown", bookingCode)
         .run();
     }
   } catch (e) {
-    console.error(`[zalo] exception cho ${bookingCode}:`, e);
+    console.error(`[telegram] exception cho ${bookingCode}:`, e);
   }
 
-  return c.json({ ok: true, bookingCode, zaloSent }, 201);
+  return c.json({ ok: true, bookingCode, notifySent }, 201);
 });
 
 // ---------------------------------------------------------------------------
@@ -211,26 +211,8 @@ function isAdmin(c: Context<{ Bindings: Env }>): boolean {
   return !!c.env.ADMIN_TOKEN && token === c.env.ADMIN_TOKEN;
 }
 
-/** GET /api/admin/zalo-followers?token=... — liệt kê follower để lấy user_id chủ quán. */
-app.get("/api/admin/zalo-followers", async (c) => {
-  if (!isAdmin(c)) return c.json({ ok: false, error: "unauthorized" }, 401);
-  const token = c.env.ZALO_OA_ACCESS_TOKEN?.trim();
-  if (!token) {
-    return c.json(
-      { ok: false, error: "missing-config", message: "Chưa cấu hình ZALO_OA_ACCESS_TOKEN." },
-      500,
-    );
-  }
-  const url =
-    "https://openapi.zalo.me/v2.0/oa/getfollowers?data=" +
-    encodeURIComponent(JSON.stringify({ offset: 0, count: 50 }));
-  const res = await fetch(url, { headers: { access_token: token } });
-  const data = await res.json().catch(() => ({}));
-  return c.json(data);
-});
-
-/** POST /api/admin/zalo-test?token=... — gửi tin nhắn test tới chủ quán. */
-app.post("/api/admin/zalo-test", async (c) => {
+/** POST /api/admin/telegram-test?token=... — gửi tin nhắn test tới chủ quán. */
+app.post("/api/admin/telegram-test", async (c) => {
   if (!isAdmin(c)) return c.json({ ok: false, error: "unauthorized" }, 401);
   const raw: unknown = await c.req.json().catch(() => ({}));
   const body = (raw ?? {}) as Partial<BookingInfo>;
@@ -243,7 +225,7 @@ app.post("/api/admin/zalo-test", async (c) => {
     time: body.time ?? "18:00",
     notes: "Tin nhắn TEST — nhận được là thành công, bỏ qua nội dung.",
   };
-  const result = await sendZaloNotification(booking, c.env);
+  const result = await sendTelegramNotification(booking, c.env);
   return c.json({ ok: result.ok, detail: result });
 });
 
