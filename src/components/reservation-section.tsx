@@ -89,7 +89,7 @@ export function ReservationSection() {
       const [h, m] = data.time.split(":").map(Number);
       const minutes = (h ?? 0) * 60 + (m ?? 0);
       if (minutes < 11 * 60 || minutes > 22 * 60 + 30) {
-        next.time = "Nhà hàng nhận bàn 11:00–22:30";
+        next.time = "Nhà hàng nhận bàn 11:00–21:30";
       }
     }
     return next;
@@ -176,7 +176,7 @@ export function ReservationSection() {
             để xác nhận.
           </p>
           <ul className="mt-8 space-y-3 text-sm text-muted">
-            <li>Giờ nhận bàn: 11:00 – 22:30</li>
+            <li>Giờ nhận bàn: 11:00 – 21:30</li>
             <li>Nhóm trên 10 người vui lòng ghi chú</li>
             <li>Giữ bàn 15 phút so với giờ đã hẹn</li>
           </ul>
