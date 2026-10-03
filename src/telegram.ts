@@ -34,13 +34,14 @@ export function formatBookingMessage(b: BookingInfo): string {
   const lines = [
     "🔔 ĐẶT BÀN MỚI — KAKAQ BBQ",
     "",
-    `- Mã đặt bàn: ${b.bookingCode}`,
-    `- Tên khách: ${b.name}`,
-    `- SĐT: ${b.phone}`,
-    `- Số người: ${b.guests}`,
-    `- Thời gian: ${b.time} ngày ${formatDateVN(b.date)}`,
+    `🎫 Mã đặt bàn: ${b.bookingCode}`,
+    `👤 Tên khách: ${b.name}`,
+    `☎️ SĐT: ${b.phone}`,
+    `👥 Số người: ${b.guests}`,
+    `📅 Ngày: ${formatDateVN(b.date)}`,
+    `🕕 Giờ: ${b.time}`,
   ];
-  if (b.notes.trim()) lines.push(`- Ghi chú: ${b.notes.trim()}`);
+  if (b.notes.trim()) lines.push(`📝 Ghi chú: ${b.notes.trim()}`);
   return lines.join("\n");
 }
 
