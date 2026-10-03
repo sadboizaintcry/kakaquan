@@ -1,0 +1,6 @@
+# Mẫu biến môi trường cho `wrangler dev` (chạy local).
+# Copy thành `.dev.vars` và điền giá trị thật. KHÔNG commit file `.dev.vars`.
+ZALO_OA_ACCESS_TOKEN=
+ZALO_OA_ID=
+ZALO_OWNER_USER_ID=
+ADMIN_TOKEN=
