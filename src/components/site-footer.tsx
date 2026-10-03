@@ -42,13 +42,13 @@ export function SiteFooter() {
             Liên hệ
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted">
-            <li>88 Võ Văn Tần, Quận 3, TP.HCM</li>
+            <li>Tổ 5, Khu Phố 2, P. Hắc Dịch, TP.HCM</li>
             <li>
-              <a href="tel:0901888247" className="hover:text-fg">
-                0901 888 247
+              <a href="tel:0972902452" className="hover:text-fg">
+                0972 902 452
               </a>
             </li>
-            <li>11:00 – 23:00 hàng ngày</li>
+            <li>11:00 – 22:00 hàng ngày</li>
           </ul>
         </div>
       </div>
