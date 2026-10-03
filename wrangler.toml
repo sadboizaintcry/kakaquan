@@ -1,0 +1,25 @@
+name = "kakaq"
+main = "src/worker.ts"
+compatibility_date = "2026-10-01"
+
+# Phục vụ frontend tĩnh (thư mục dist sau khi chạy `npm run build`).
+# Mọi request không phải /api/* sẽ trả về file tĩnh, SPA fallback về index.html.
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+
+# Database đặt bàn (Cloudflare D1).
+[[d1_databases]]
+binding = "DB"
+database_name = "kakaq-db"
+database_id = "PASTE-D1-DATABASE-ID-HERE"
+migrations_dir = "migrations/d1"
+
+# Biến môi trường public (không chứa secret).
+[vars]
+ZALO_OA_ID = "PASTE-ZALO-OA-ID-HERE"
+
+# Secrets — cài bằng `wrangler secret put`, KHÔNG ghi vào file này:
+#   ZALO_OA_ACCESS_TOKEN — access token của Zalo OA
+#   ZALO_OWNER_USER_ID   — user_id Zalo của chủ quán (người nhận thông báo)
+#   ADMIN_TOKEN          — token bảo vệ các endpoint /api/admin/*
