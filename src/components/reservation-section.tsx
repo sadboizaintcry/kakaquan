@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const STORAGE_KEY = "kakaq-reservations";
-
 type FormState = {
   name: string;
   phone: string;
@@ -15,6 +13,8 @@ type FormState = {
   time: string;
   notes: string;
 };
+
+type SubmittedState = FormState & { bookingCode: string };
 
 const EMPTY: FormState = {
   name: "",
@@ -43,7 +43,9 @@ export function ReservationSection() {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
     {},
   );
-  const [submitted, setSubmitted] = useState<FormState | null>(null);
+  const [submitted, setSubmitted] = useState<SubmittedState | null>(null);
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const minDate = useMemo(() => todayISO(), []);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -71,23 +73,50 @@ export function ReservationSection() {
     return next;
   }
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    setServerError(null);
     const next = validate(form);
     if (Object.keys(next).length) {
       setErrors(next);
       return;
     }
+    setSending(true);
     try {
-      const prev = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as unknown[];
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify([...prev, { ...form, createdAt: new Date().toISOString() }]),
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          phone: form.phone.trim(),
+          guests: Number(form.guests),
+          date: form.date,
+          time: form.time,
+          notes: form.notes.trim(),
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as {
+        ok?: boolean;
+        bookingCode?: string;
+        error?: string;
+        details?: Record<string, string>;
+        message?: string;
+      } | null;
+      if (!res.ok || !data?.ok || !data.bookingCode) {
+        if (data?.error === "validation" && data.details) {
+          setErrors(data.details as Partial<Record<keyof FormState, string>>);
+          return;
+        }
+        throw new Error(data?.message ?? "Gửi yêu cầu thất bại, thử lại sau.");
+      }
+      setSubmitted({ ...form, bookingCode: data.bookingCode });
+    } catch (err) {
+      setServerError(
+        err instanceof Error ? err.message : "Gửi yêu cầu thất bại, thử lại sau.",
       );
-    } catch {
-      /* ignore quota */
+    } finally {
+      setSending(false);
     }
-    setSubmitted(form);
   }
 
   return (
@@ -124,8 +153,12 @@ export function ReservationSection() {
                 {submitted.name} · {submitted.guests} người · {submitted.date} lúc{" "}
                 {submitted.time}
               </p>
+              <p className="mt-3 rounded-lg bg-bg px-3 py-2 font-mono text-sm tracking-wider text-accent">
+                Mã đặt bàn: {submitted.bookingCode}
+              </p>
               <p className="mt-4 text-sm text-subtle">
-                Quán sẽ liên hệ {submitted.phone} để xác nhận bàn.
+                Quán sẽ liên hệ {submitted.phone} để xác nhận bàn. Giữ mã đặt bàn
+                khi đến quán.
               </p>
               <Button
                 variant="outline"
@@ -207,8 +240,18 @@ export function ReservationSection() {
                   onChange={(e) => update("notes", e.target.value)}
                 />
               </Field>
-              <Button type="submit" size="lg" className="w-full sm:w-auto">
-                Gửi yêu cầu đặt bàn
+              {serverError ? (
+                <p className="text-sm text-accent" role="alert">
+                  {serverError}
+                </p>
+              ) : null}
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full sm:w-auto"
+                disabled={sending}
+              >
+                {sending ? "Đang gửi…" : "Gửi yêu cầu đặt bàn"}
               </Button>
             </form>
           )}
