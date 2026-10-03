@@ -12,7 +12,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "kakaq-db"
-database_id = "PASTE-D1-DATABASE-ID-HERE"
+database_id = "78ecd13c-c8a6-4dfc-a4a8-482ea3764c83"
 migrations_dir = "migrations/d1"
 
 # Biến môi trường public (không chứa secret).
