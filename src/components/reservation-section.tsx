@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,12 @@ function todayISO() {
   return `${y}-${m}-${day}`;
 }
 
+/** YYYY-MM-DD → DD/MM/YYYY để hiển thị cho khách. */
+function formatDateVN(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return y && m && d ? `${d}/${m}/${y}` : iso;
+}
+
 function isPhone(value: string) {
   const digits = value.replace(/[\s.-]/g, "");
   return /^(0|\+84)[0-9]{9,10}$/.test(digits);
@@ -46,6 +52,7 @@ export function ReservationSection() {
   const [submitted, setSubmitted] = useState<SubmittedState | null>(null);
   const [sending, setSending] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const minDate = useMemo(() => todayISO(), []);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -73,9 +80,29 @@ export function ReservationSection() {
     return next;
   }
 
+  async function copyBookingCode() {
+    if (!submitted) return;
+    try {
+      await navigator.clipboard.writeText(submitted.bookingCode);
+    } catch {
+      // Fallback cho trình duyệt không hỗ trợ Clipboard API
+      const ta = document.createElement("textarea");
+      ta.value = submitted.bookingCode;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2000);
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setServerError(null);
+    setCopied(false);
     const next = validate(form);
     if (Object.keys(next).length) {
       setErrors(next);
@@ -150,15 +177,33 @@ export function ReservationSection() {
                 Đã nhận yêu cầu
               </h3>
               <p className="mt-2 text-muted">
-                {submitted.name} · {submitted.guests} người · {submitted.date} lúc{" "}
-                {submitted.time}
+                {submitted.name} · {submitted.guests} người ·{" "}
+                {formatDateVN(submitted.date)} lúc {submitted.time}
               </p>
-              <p className="mt-3 rounded-lg bg-bg px-3 py-2 font-mono text-sm tracking-wider text-accent">
-                Mã đặt bàn: {submitted.bookingCode}
-              </p>
+              <div className="mt-3 flex items-center gap-1 rounded-lg bg-bg py-1 pr-1 pl-3">
+                <p className="font-mono text-sm tracking-wider text-accent">
+                  Mã đặt bàn: {submitted.bookingCode}
+                </p>
+                <button
+                  type="button"
+                  onClick={copyBookingCode}
+                  className="grid size-8 place-items-center rounded-md text-muted transition hover:bg-elevated hover:text-fg"
+                  aria-label="Sao chép mã đặt bàn"
+                  title="Sao chép mã đặt bàn"
+                >
+                  {copied ? (
+                    <Check className="size-4 text-accent" />
+                  ) : (
+                    <Copy className="size-4" />
+                  )}
+                </button>
+              </div>
+              {copied ? (
+                <p className="mt-2 text-xs text-accent">Đã sao chép mã đặt bàn</p>
+              ) : null}
               <p className="mt-4 text-sm text-subtle">
-                Quán sẽ liên hệ {submitted.phone} để xác nhận bàn. Giữ mã đặt bàn
-                khi đến quán.
+                Quán sẽ liên hệ bạn để xác nhận bàn. Giữ mã đặt bàn khi đến
+                quán.
               </p>
               <Button
                 variant="outline"
@@ -166,6 +211,7 @@ export function ReservationSection() {
                 onClick={() => {
                   setSubmitted(null);
                   setForm(EMPTY);
+                  setCopied(false);
                 }}
               >
                 Gửi yêu cầu khác
