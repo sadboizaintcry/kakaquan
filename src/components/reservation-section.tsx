@@ -1,5 +1,12 @@
 import { Check, Copy } from "lucide-react";
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,6 +61,14 @@ export function ReservationSection() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const minDate = useMemo(() => todayISO(), []);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  // Đặt bàn thành công → tự cuộn tới panel thông báo
+  useEffect(() => {
+    if (submitted) {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [submitted]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -169,7 +184,10 @@ export function ReservationSection() {
 
         <div className="rounded-2xl bg-surface p-6 shadow-[0_0_0_1px_rgba(244,239,232,0.08)] sm:p-8">
           {submitted ? (
-            <div className="flex min-h-80 flex-col items-start justify-center">
+            <div
+              ref={resultRef}
+              className="flex min-h-80 flex-col items-start justify-center"
+            >
               <span className="grid size-11 place-items-center rounded-full bg-accent/15 text-accent">
                 <Check className="size-5" />
               </span>
