@@ -1,5 +1,7 @@
 node_modules/
-.project_id
-.github_repo
+dist/
+.dev.vars
 .env
 .env.*
+.project_id
+.github_repo
