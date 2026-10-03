@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS bookings (
   date TEXT NOT NULL,          -- YYYY-MM-DD
   time TEXT NOT NULL,          -- HH:MM
   notes TEXT NOT NULL DEFAULT '',
-  zalo_sent INTEGER NOT NULL DEFAULT 0,  -- 1 = đã gửi Zalo thành công
-  zalo_error TEXT,                        -- lỗi gửi Zalo (nếu có)
-  created_at TEXT NOT NULL                -- ISO timestamp
+  notify_sent INTEGER NOT NULL DEFAULT 0,  -- 1 = đã gửi Telegram thành công
+  notify_error TEXT,                       -- lỗi gửi tin (nếu có)
+  created_at TEXT NOT NULL                 -- ISO timestamp
 );
 
 CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings (date);
