@@ -14,12 +14,3 @@ binding = "DB"
 database_name = "kakaq-db"
 database_id = "78ecd13c-c8a6-4dfc-a4a8-482ea3764c83"
 migrations_dir = "migrations/d1"
-
-# Biến môi trường public (không chứa secret).
-[vars]
-ZALO_OA_ID = "PASTE-ZALO-OA-ID-HERE"
-
-# Secrets — cài bằng `wrangler secret put`, KHÔNG ghi vào file này:
-#   ZALO_OA_ACCESS_TOKEN — access token của Zalo OA
-#   ZALO_OWNER_USER_ID   — user_id Zalo của chủ quán (người nhận thông báo)
-#   ADMIN_TOKEN          — token bảo vệ các endpoint /api/admin/*
